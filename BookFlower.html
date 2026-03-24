@@ -156,6 +156,24 @@
             background: rgba(212,175,119,0.9); color: #1a1a1a;
             padding: 8px 18px; border-radius: 30px; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        
+        /* marker style nhẹ nhàng để dễ dò tìm */
+        .marker-placeholder {
+            background-color: #fff3cd;
+            border-left: 6px solid #d4af77;
+            padding: 12px 20px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 1.2rem;
+            color: #b38b3d;
+            font-weight: bold;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .marker-placeholder::before {
+            content: "📌 ";
+            font-weight: normal;
+        }
     </style>
     <!-- MathJax cho công thức toán -->
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -221,7 +239,7 @@
             <a href="#section-poem" onclick="setActive(this)">10. Toàn bài thơ song ngữ</a>
         </div>
 
-        <!-- Main content -->
+        <!-- Main content: mỗi mục đều có marker ABCDEFGH để bạn dễ dàng thay bằng nội dung thực -->
         <div class="main-content" id="main-content">
 
             <!-- Trang bìa trong -->
@@ -237,39 +255,96 @@
                 Hãy tưởng tượng thống kê là nghệ thuật hiểu về cả một khu vườn (Tổng thể) thông qua việc quan sát một lẵng hoa (Mẫu). Những con số bạn tính toán từ lẵng hoa đó là 'Thống kê' (Statistic), dùng để đoán xem bí mật thực sự của cả khu vườn 'Tham số' (Parameter) là gì...
             </div>
 
-            <!-- Phần 1 -->
+            <!-- Phần 1: Tổng thể (Ω) – Cả mảnh vườn -->
             <h2 id="section-1">1. Tổng thể (Ω) – Cả mảnh vườn</h2>
             <div class="poem">
                 Tổng thể là cả mảnh vườn,<br>
                 Ký hiệu Omega (Ω) ngát hương bốn bề.
             </div>
-            <p>Tổng thể (Ω) chính là toàn bộ khu vườn với hàng ngàn bông hoa đủ màu sắc, hương thơm, chiều cao… Đây là tập hợp hoàn chỉnh tất cả các đối tượng mà chúng ta muốn nghiên cứu.</p>
-            <p>Trong thống kê học (Statistics – Thống kê), đối tượng quan tâm đầu tiên chính là <strong>tổng thể (population)</strong>.</p>
-            <p>Về mặt toán học:</p>
-            <p>\[\Omega = \{\omega_1, \omega_2, \dots, \omega_N\}\]</p>
-            <p>(Bạn có thể cuộn xuống để đọc tiếp toàn bộ nội dung LaTeX đã được chuyển sang HTML đẹp mắt).</p>
-
-            <!-- Tiếp tục chèn toàn bộ nội dung còn lại tương tự -->
-            <!-- Vì nội dung rất dài, tôi đã rút gọn một số phần để code không quá dài, nhưng cấu trúc đã sẵn sàng để bạn copy-paste toàn bộ LaTeX đã convert -->
-
-            <h2 id="section-poem">Toàn bài thơ song ngữ</h2>
+            <p>Tổng thể (Ω) chính là toàn bộ khu vườn với hàng ngàn bông hoa đủ màu sắc, hương thơm, chiều cao… Đây là tập hợp hoàn chỉnh tất cả các đối tượng mà chúng ta muốn nghiên cứu. Trong thống kê học, đối tượng quan tâm đầu tiên chính là <strong>tổng thể (population)</strong>.</p>
+            <p>Về mặt toán học: \(\Omega = \{\omega_1, \omega_2, \dots, \omega_N\}\) với N là kích thước tổng thể.</p>
+            <!-- MARKER: ABCDEFGH cho mục 1 -->
+            <div class="marker-placeholder">🔖 ABCDEFGH — [CHỖ NÀY BẠN SẼ ĐIỀN NỘI DUNG THỰC CỦA SÁCH: giải thích chuyên sâu về tổng thể, ví dụ minh họa, công thức, ý nghĩa thực tiễn, v.v.]</div>
+            
+            <!-- Phần 2: Mẫu (S) & Đơn vị mẫu -->
+            <h2 id="section-2">2. Mẫu (S) & Đơn vị mẫu</h2>
+            <div class="poem">
+                Lẵng hoa tươi thắm gọi là Sample,<br>
+                Đại diện vườn hoa, tinh túy ngàn phương.
+            </div>
+            <p>Mẫu (sample) là một tập hợp con được chọn từ tổng thể, giúp ta khám phá đặc tính của tổng thể mà không cần khảo sát toàn bộ. Mỗi phần tử trong mẫu gọi là đơn vị mẫu.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: kích thước mẫu, tính đại diện, cách chọn mẫu sơ bộ, ví dụ thực tế về lấy mẫu trong khảo sát ý kiến sinh viên, chất lượng sản phẩm, v.v.]</div>
+            
+            <!-- Phần 3: Tham số & Thống kê mẫu -->
+            <h2 id="section-3">3. Tham số & Thống kê mẫu</h2>
+            <div class="poem">
+                Tham số (Parameter) – hương sắc vườn xưa,<br>
+                Thống kê (Statistic) – lẵng hoa đong đưa nắng chiều.
+            </div>
+            <p><strong>Tham số</strong> là giá trị đặc trưng của tổng thể (thường ký hiệu μ, σ, p...). <strong>Thống kê mẫu</strong> là giá trị tính từ mẫu ( \(\bar{x}, s, \hat{p}\) ). Dùng thống kê để ước lượng tham số.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân biệt chi tiết giữa parameter và statistic, công thức tính trung bình mẫu, phương sai mẫu, sai số chuẩn, các ví dụ nghiên cứu điển hình.]</div>
+            
+            <!-- Phần 4: Biến & Bốn thang đo -->
+            <h2 id="section-4">4. Biến & Bốn thang đo</h2>
+            <p>Biến (variable) là đặc tính có thể thay đổi giữa các đơn vị. Có bốn thang đo: định danh (nominal), thứ bậc (ordinal), khoảng (interval), tỷ lệ (ratio).</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: mô tả từng thang đo, ví dụ cụ thể cho từng loại: màu sắc (danh nghĩa), xếp hạng (thứ bậc), nhiệt độ Celsius (khoảng), chiều cao (tỷ lệ). Phân tích ứng dụng và phép toán cho phép.]</div>
+            
+            <!-- Phần 5: Biến rời rạc & liên tục -->
+            <h2 id="section-5">5. Biến rời rạc & liên tục</h2>
+            <p>Biến rời rạc (discrete) có giá trị đếm được (số học sinh, số bông hoa). Biến liên tục (continuous) có thể nhận vô hạn giá trị trong khoảng (chiều cao, thời gian).</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân tích chuyên sâu, ví dụ minh họa trong y học, kinh tế, phân phối xác suất tương ứng, cách xử lý dữ liệu liên tục và rời rạc.]</div>
+            
+            <!-- Phần 6: Các phương pháp lấy mẫu -->
+            <h2 id="section-6">6. Các phương pháp lấy mẫu</h2>
+            <p>Ngẫu nhiên đơn giản, hệ thống, phân tầng, cụm, phi xác suất... Mỗi phương pháp có ưu điểm riêng.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: giải thích chi tiết từng kỹ thuật, sơ đồ minh họa, tình huống thực tế như điều tra dân số, nghiên cứu thị trường, ưu nhược điểm và sai số tiềm ẩn.]</div>
+            
+            <!-- Phần 7: Sai số lấy mẫu & Sai số phi mẫu -->
+            <h2 id="section-7">7. Sai số lấy mẫu & Sai số phi mẫu</h2>
+            <p>Sai số lấy mẫu (sampling error) là chênh lệch do chỉ khảo sát mẫu. Sai số phi mẫu (non-sampling error) đến từ thu thập, xử lý dữ liệu, thiên vị.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân tích nguyên nhân, cách giảm thiểu sai số, các cạm bẫy trong khảo sát thực tế, ví dụ về sai số do câu hỏi gây hiểu lầm, sai số do chọn mẫu không ngẫu nhiên.]</div>
+            
+            <!-- Phần 8: Làm sạch dữ liệu -->
+            <h2 id="section-8">8. Làm sạch dữ liệu</h2>
+            <p>Quá trình phát hiện và xử lý dữ liệu thiếu, ngoại lai, không nhất quán để đảm bảo độ tin cậy trước khi phân tích.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: các bước làm sạch dữ liệu, kỹ thuật xử lý missing values, outlier detection bằng Z-score, IQR, tác động của dữ liệu bẩn đến kết quả thống kê, case study thực tế.]</div>
+            
+            <!-- Phần 9: Khung mẫu & DCOVA -->
+            <h2 id="section-9">9. Khung mẫu & DCOVA</h2>
+            <p>Khung mẫu (sampling frame) là danh sách các phần tử tổng thể. DCOVA là quy trình: Define, Collect, Organize, Visualize, Analyze.</p>
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: tầm quan trọng của khung mẫu, các lỗi thường gặp. Mô hình DCOVA trong phân tích thống kê hiện đại, ví dụ ứng dụng trong kinh doanh, khoa học dữ liệu.]</div>
+            
+            <!-- Phần 10: Toàn bài thơ song ngữ (có thêm marker để bạn thêm nội dung thực tế nếu muốn) -->
+            <h2 id="section-poem">10. Toàn bài thơ song ngữ</h2>
             <div class="poem">
                 Vườn hoa là cả Population,<br>
                 Gói vào một lẵng gọi tên Sample.<br>
-                ... (toàn bộ bài thơ lục bát bạn cung cấp)
+                Tham số (Parameter) là hương là sắc vườn xưa,<br>
+                Thống kê (Statistic) từ lẵng đong đưa nắng chiều.<br>
+                Biến (Variable) như muôn cánh sắc màu,<br>
+                Thang đo định danh, thứ bậu, khoảng, tỷ lệ…<br>
+                Rời rạc (Discrete) đếm được vần thơ,<br>
+                Liên tục (Continuous) trải dài như giấc mơ không cùng.<br>
+                Lấy mẫu ngẫu nhiên, phân tầng, hệ thống, cụm…<br>
+                Sai số lấy mẫu, phi mẫu cần trông,<br>
+                Làm sạch dữ liệu như gột bụi hồng,<br>
+                Khung mẫu vững chắc – DCOVA sáng trong.
             </div>
-
+            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: Phần này có thể là bản dịch tiếng Anh hoàn chỉnh, hoặc phân tích từng câu thơ kèm theo công thức minh họa, cảm nhận của tác giả về mối liên hệ giữa thống kê và thi ca. Bạn có thể thay bằng toàn bộ bài thơ song ngữ đầy đủ và lời bình.]</div>
+            
+            <!-- Thêm một phần kết và ghi chú marker tổng kết -->
             <div style="text-align:center; margin:60px 0; font-size:15px; color:#b38b3d;">
                 🌸 Cuối sách – Hết 🌸<br>
-                Cảm ơn bạn đã đọc “Các Thuật Ngữ Căn Bản Trong Thống Kê”
+                Cảm ơn bạn đã đọc “Các Thuật Ngữ Căn Bản Trong Thống Kê”<br>
+                <span style="font-size:12px;">📌 Mọi dòng có chứa "ABCDEFGH" đều là vị trí bạn cần thay bằng nội dung thực sự của cuốn sách.</span>
             </div>
         </div>
 
-        <div class="page-number" id="page-number">Trang 1 / 38</div>
+        <div class="page-number" id="page-number">Trang 1 / 42</div>
     </div>
 
     <script>
-        // ==================== VƯỜN HOA CANVAS (giữ nguyên từ trước) ====================
+        // ==================== VƯỜN HOA CANVAS ====================
         const canvas = document.getElementById('garden-canvas');
         const ctx = canvas.getContext('2d');
         let width, height, flowers = [];
@@ -314,7 +389,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas(); initFlowers(); animate();
 
-        // Click thêm hoa
+        // Click thêm hoa bên ngoài bìa
         document.addEventListener('click', e => {
             if(document.getElementById('book-interior').style.display === 'block') return;
             for(let i=0;i<12;i++) {
@@ -324,12 +399,14 @@
             }
         });
 
-        // ==================== MỞ SÁCH ====================
+        // ==================== MỞ / ĐÓNG SÁCH ====================
         function openBook() {
             document.getElementById('cover-screen').style.opacity = '0';
             setTimeout(() => {
                 document.getElementById('cover-screen').style.display = 'none';
                 document.getElementById('book-interior').style.display = 'block';
+                // Cập nhật số trang ảo (chỉ mang tính biểu tượng)
+                document.getElementById('page-number').innerText = 'Trang 1 / 42';
             }, 1200);
         }
         function closeBook() {
@@ -341,8 +418,24 @@
             document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
             el.classList.add('active');
         }
+        
+        // đánh dấu active khi cuộn (tính năng nhẹ)
+        const sections = document.querySelectorAll('.main-content h2');
+        window.addEventListener('scroll', function() {
+            if(document.getElementById('book-interior').style.display !== 'block') return;
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150;
+                if(pageYOffset >= sectionTop) current = section.getAttribute('id');
+            });
+            document.querySelectorAll('.sidebar a').forEach(a => {
+                a.classList.remove('active');
+                if(a.getAttribute('href') === '#'+current) a.classList.add('active');
+            });
+        });
 
-        console.log('%c✅ Cuốn sách kỹ thuật số đã hoàn thành! 🌸 Bạn có thể đọc toàn bộ nội dung ngay trên web.', 'color:#4caf50; font-size:18px; font-weight:bold;');
+        console.log('%c✅ Cuốn sách kỹ thuật số đã hoàn thành! 🌸 Mỗi mục trong mục lục đều có dòng chữ "ABCDEFGH" nổi bật để bạn dễ dàng dò tìm và điền nội dung thực của cuốn sách.', 'color:#4caf50; font-size:16px; font-weight:bold;');
+        console.log('%c📘 Gợi ý: Bạn có thể tìm kiếm từ khóa "ABCDEFGH" trong code để nhanh chóng thay thế bằng nội dung chính xác từ bản thảo.', 'background:#d4af77; color:#1a3c2e; padding:4px 8px; border-radius:8px;');
     </script>
 </body>
 </html>
