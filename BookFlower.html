@@ -2,447 +2,540 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📖 Các Thuật Ngữ Căn Bản Trong Thống Kê - Mai Thế Duy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Tình Ca Hàm Số & Biến Số - Bài thơ lục bát</title>
+    
+    <!-- MathJax 3 for beautiful math rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&family=Noto+Serif:wght@400;700&display=swap');
-
-        :root {
-            --paper: #f5f5e8;
-            --ink: #1a1a1a;
-            --gold: #d4af77;
-            --deepGold: #b38b3d;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #0b3d2e, #1a5f47);
-            overflow-x: hidden;
+            background: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
+            font-family: 'Georgia', 'Times New Roman', 'Noto Serif CJK SC', 'Noto Serif', serif;
+            min-height: 100vh;
+            padding: 2rem 1rem;
             position: relative;
-            color: var(--ink);
+            overflow-x: hidden;
         }
 
-        /* ==================== CANVAS VƯỜN HOA ==================== */
-        #garden-canvas {
+        /* Hiệu ứng nền lung linh */
+        body::before {
+            content: '';
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            opacity: 0.75;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 40%, rgba(255,200,150,0.08) 0%, rgba(100,80,60,0.02) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Những chấm sao lung linh */
+        .star {
+            position: fixed;
+            background: rgba(255,240,200,0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            background: rgba(255,248,235,0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 48px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,215,150,0.3);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Header lung linh */
+        .poem-header {
+            text-align: center;
+            padding: 2.5rem 2rem 1.5rem;
+            background: linear-gradient(135deg, #2c3e2b 0%, #1e2a1d 100%);
+            color: #f7e5c2;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poem-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,215,130,0.15) 0%, transparent 70%);
+            animation: shimmer 8s infinite linear;
             pointer-events: none;
         }
 
-        /* ==================== COVER ==================== */
-        .cover-screen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1.2s ease;
+        @keyframes shimmer {
+            0% { transform: translate(-20%, -20%) rotate(0deg); }
+            100% { transform: translate(20%, 20%) rotate(360deg); }
         }
-        .book-container {
-            position: relative;
-            width: 920px;
-            height: 620px;
-            z-index: 2;
-            perspective: 1500px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-        }
-        .book-cover {
-            width: 100%; height: 100%;
-            background: linear-gradient(105deg, #d4af77 2%, #f4e9c8 8%, #f4e9c8 92%, #d4af77 98%);
-            border: 18px solid #2c2c2c;
-            border-radius: 12px 20px 20px 12px;
-            box-shadow: 25px 25px 40px rgba(0,0,0,0.5),
-                        inset 0 0 80px rgba(255,255,255,0.4),
-                        inset -20px -20px 60px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-            transform: rotateY(-8deg);
-            transition: transform 0.6s ease;
-        }
-        .book-cover:hover { transform: rotateY(0deg); }
-        .book-spine {
-            position: absolute; left: -18px; top: 0;
-            width: 48px; height: 100%;
-            background: linear-gradient(#2c2c2c, #1f1f1f);
-            border-radius: 12px 0 0 12px;
-            box-shadow: 8px 0 15px rgba(0,0,0,0.4);
-            transform: rotateY(20deg);
-            z-index: 3;
-            display: flex; align-items: center; justify-content: center;
-            writing-mode: vertical-rl; text-orientation: mixed;
-            color: #f4e9c8; font-family: 'Playfair Display', serif;
-            font-size: 22px; letter-spacing: 6px; padding-top: 80px;
-        }
-        .cover-content {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 60px 80px; display: flex; flex-direction: column;
-            justify-content: space-between; z-index: 4; color: #2c2c2c;
-        }
-        .title { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700;
-            line-height: 1.1; text-align: center; margin: 20px 0; color: #1a3c2e; }
-        .subtitle { font-size: 19px; font-weight: 300; text-align: center; margin: 15px 0 30px;
-            line-height: 1.4; color: #3d5c4a; }
-        .flower-border {
-            position: absolute; top: 25px; left: 25px; right: 25px; bottom: 25px;
-            border: 3px dashed #8b6f47; border-radius: 8px; pointer-events: none; opacity: 0.6;
-        }
-        .math-symbol {
-            position: absolute; font-size: 28px; color: rgba(27,77,59,0.25);
-            animation: floatMath 25s linear infinite; z-index: 5;
-        }
-        @keyframes floatMath { 0%{transform:translateY(0)} 100%{transform:translateY(-200vh)} }
 
-        /* ==================== BOOK INTERIOR ==================== */
-        .book-interior {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 200;
-            background: var(--paper);
-            overflow: hidden;
-        }
-        .header {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(212,175,119,0.95); color: #1a1a1a;
-            padding: 12px 40px; display: flex; align-items: center; z-index: 300;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .header h1 { font-family: 'Playfair Display', serif; font-size: 24px; flex: 1; }
-        .nav-btn { background: none; border: none; font-size: 28px; cursor: pointer; margin: 0 10px; }
-        
-        .sidebar {
-            position: fixed; left: 0; top: 60px; bottom: 0; width: 280px;
-            background: #f4e9c8; overflow-y: auto; padding: 20px; border-right: 3px solid var(--gold);
-        }
-        .sidebar a {
-            display: block; padding: 10px 15px; margin: 4px 0;
-            color: #2c2c2c; text-decoration: none; border-radius: 6px;
-        }
-        .sidebar a:hover, .sidebar a.active { background: var(--gold); color: white; }
-
-        .main-content {
-            margin-left: 280px; margin-top: 60px; padding: 40px 60px 80px;
-            max-width: 1000px; line-height: 1.75; font-size: 18px;
-        }
-        .main-content h1, .main-content h2 {
-            font-family: 'Playfair Display', serif; color: #b38b3d; margin: 40px 0 20px;
-        }
-        .poem {
-            background: #fffdf0; border-left: 8px solid var(--deepGold);
-            padding: 25px 30px; margin: 30px 0; font-style: italic; font-size: 21px;
-            line-height: 1.6; color: #2c2c2c;
-        }
-        .decorated-box {
-            background: #f5f5e8; border: 2px solid var(--gold); border-radius: 12px;
-            padding: 25px; margin: 30px 0; box-shadow: 6px 6px 12px rgba(0,0,0,0.1);
-        }
-        .math { color: #1a3c2e; font-weight: bold; }
-
-        table {
-            width: 100%; border-collapse: collapse; margin: 25px 0;
-            background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        th, td { padding: 14px; border: 1px solid #d4af77; text-align: left; }
-        th { background: #d4af77; color: white; }
-
-        .page-number {
-            position: fixed; bottom: 20px; right: 40px;
-            background: rgba(212,175,119,0.9); color: #1a1a1a;
-            padding: 8px 18px; border-radius: 30px; font-size: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        
-        /* marker style nhẹ nhàng để dễ dò tìm */
-        .marker-placeholder {
-            background-color: #fff3cd;
-            border-left: 6px solid #d4af77;
-            padding: 12px 20px;
-            margin: 20px 0;
-            font-family: monospace;
-            font-size: 1.2rem;
-            color: #b38b3d;
+        .poem-header h1 {
+            font-size: 2.6rem;
             font-weight: bold;
-            border-radius: 0 12px 12px 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            letter-spacing: 4px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            position: relative;
+            display: inline-block;
         }
-        .marker-placeholder::before {
-            content: "📌 ";
-            font-weight: normal;
+
+        .poem-header h1 span {
+            display: inline-block;
+            animation: floatGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGlow {
+            0%, 100% { text-shadow: 0 0 5px #ffd966, 0 2px 10px rgba(0,0,0,0.5); transform: translateY(0px); }
+            50% { text-shadow: 0 0 20px #ffb347, 0 2px 15px rgba(0,0,0,0.6); transform: translateY(-3px); }
+        }
+
+        .poem-header .subtitle {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: #e6d5b3;
+            margin-top: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .author {
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            color: #d4c29a;
+            letter-spacing: 1px;
+        }
+
+        /* Section style */
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 1.8rem 2rem 0.8rem;
+            color: #8b5a2b;
+            border-left: 6px solid #d4a373;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .section-title i {
+            font-size: 1.3rem;
+            margin-right: 8px;
+        }
+
+        .verse {
+            font-style: italic; /* Tất cả dòng thơ đều nghiêng */
+            line-height: 2.1;
+            font-size: 1.13rem;
+            background: linear-gradient(to bottom, #fffef7, #fffaf0);
+            padding: 1.8rem 2rem;
+            border-radius: 32px;
+            margin: 0.5rem 1.5rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,245,0.8);
+            border: 1px solid #f0e2ce;
+            transition: transform 0.2s;
+        }
+
+        .verse:hover {
+            transform: scale(1.01);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+        }
+
+        .verse p {
+            margin: 0.4rem 0;
+            text-align: center;
+        }
+
+        /* MathJax styling - công thức toán học đẹp */
+        mjx-container {
+            font-style: normal !important;
+            display: inline-block;
+            margin: 0 2px;
+        }
+        
+        .math-inline {
+            font-style: normal;
+            display: inline-block;
+        }
+
+        .english-verse {
+            background: linear-gradient(135deg, #faf5e8, #fef8ec);
+            border-left: 4px solid #c2a15b;
+            font-size: 1rem;
+            color: #5e4b32;
+        }
+
+        /* Sơ đồ ánh xạ lung linh */
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 1rem 2rem;
+            padding: 1rem;
+            background: radial-gradient(ellipse at center, #f9efde, #efe2cf);
+            border-radius: 64px;
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+
+        .diagram-svg {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 12px 20px rgba(0,0,0,0.2));
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .diagram-svg:hover {
+            transform: scale(1.02);
+        }
+
+        /* Thông điệp tương tác */
+        .message-card {
+            text-align: center;
+            background: linear-gradient(145deg, #f7efdf, #fcf5e8);
+            margin: 1rem 2rem 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            font-size: 1rem;
+            color: #7a562e;
+            border: 1px solid #eedfc4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            min-height: 85px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 1rem 2rem 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #d4bc94;
+            border: none;
+            color: #2c2b26;
+            padding: 10px 24px;
+            font-size: 0.9rem;
+            border-radius: 40px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background: #b8875a;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.8rem;
+            font-size: 0.75rem;
+            color: #baa06e;
+            border-top: 1px solid #ecdbaa;
+            background: #fff9ef;
+        }
+        
+        /* Style cho công thức trong SVG */
+        .math-svg {
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 32px;
+            }
+            .verse {
+                padding: 1rem;
+                margin: 0.5rem 1rem;
+            }
+            .section-title {
+                margin: 1.2rem 1rem;
+                font-size: 1.4rem;
+            }
+            .poem-header h1 {
+                font-size: 1.8rem;
+            }
+            .btn-group {
+                gap: 10px;
+            }
+            .btn {
+                padding: 6px 16px;
+            }
         }
     </style>
-    <!-- MathJax cho công thức toán -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-
-    <!-- CANVAS VƯỜN HOA -->
-    <canvas id="garden-canvas"></canvas>
-
-    <!-- ==================== BÌA SÁCH ==================== -->
-    <div id="cover-screen" class="cover-screen">
-        <div class="book-container">
-            <div class="book-spine">CÁC THUẬT NGỮ CĂN BẢN TRONG THỐNG KÊ</div>
-            <div class="book-cover">
-                <div class="flower-border"></div>
-                <div class="cover-content">
-                    <div class="top-decoration">
-                        <h3 style="font-size:18px; letter-spacing:8px; color:#3d5c4a;">🌸 VƯỜN HOA THỐNG KÊ 🌸</h3>
-                    </div>
-                    <h1 class="title">CÁC THUẬT NGỮ<br>CĂN BẢN TRONG<br>THỐNG KÊ</h1>
-                    <p class="subtitle">Một góc nhìn thi ca về Thống kê Mô tả<br>Hành trình từ Vườn hoa đến Bức tranh Khoa học</p>
-                    <div class="author" style="font-size:28px; font-family:'Playfair Display',serif;">Mai Thế Duy</div>
-                    <div class="publisher">NHÀ XUẤT BẢN THỐNG NHẤT TOÁN HỌC<br>2026</div>
-                </div>
-                <!-- Math symbols bay -->
-                <div class="math-symbol" style="top:18%;left:12%;">Ω</div>
-                <div class="math-symbol" style="top:28%;left:78%;">μ</div>
-                <div class="math-symbol" style="top:65%;left:15%;">σ²</div>
-                <div class="math-symbol" style="top:72%;left:82%;">¯X</div>
-                <div class="math-symbol" style="top:12%;left:65%;">∞</div>
-            </div>
-        </div>
-        <div style="position:absolute; bottom:60px; text-align:center; width:100%; z-index:10;">
-            <button onclick="openBook()" 
-                    style="background:#d4af77; color:#1a1a1a; border:none; padding:18px 50px; font-size:22px; border-radius:50px; cursor:pointer; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
-                🌸 Mở sách đọc ngay 🌸
-            </button>
-        </div>
+<div class="container">
+    <div class="poem-header">
+        <h1><span>📐</span> Tình Ca Hàm Số & Biến Số <span>📈</span></h1>
+        <div class="subtitle">Khúc Lục Bát Giao Thoa Toán Học</div>
+        <div class="author">Dr.rer.nat Duymt</div>
     </div>
 
-    <!-- ==================== NỘI DUNG SÁCH (INTERIOR) ==================== -->
-    <div id="book-interior" class="book-interior">
-
-        <!-- Header -->
-        <div class="header">
-            <h1>📖 Các Thuật Ngữ Căn Bản Trong Thống Kê</h1>
-            <span style="margin-right:20px;">Mai Thế Duy</span>
-            <button class="nav-btn" onclick="closeBook()">✕</button>
-        </div>
-
-        <!-- Sidebar TOC -->
-        <div class="sidebar">
-            <h3 style="margin-bottom:15px; color:#b38b3d;">Mục lục</h3>
-            <a href="#section-1" onclick="setActive(this)">1. Tổng thể (Ω) – Cả mảnh vườn</a>
-            <a href="#section-2" onclick="setActive(this)">2. Mẫu (S) & Đơn vị mẫu</a>
-            <a href="#section-3" onclick="setActive(this)">3. Tham số & Thống kê mẫu</a>
-            <a href="#section-4" onclick="setActive(this)">4. Biến & Bốn thang đo</a>
-            <a href="#section-5" onclick="setActive(this)">5. Biến rời rạc & liên tục</a>
-            <a href="#section-6" onclick="setActive(this)">6. Các phương pháp lấy mẫu</a>
-            <a href="#section-7" onclick="setActive(this)">7. Sai số lấy mẫu & Sai số phi mẫu</a>
-            <a href="#section-8" onclick="setActive(this)">8. Làm sạch dữ liệu</a>
-            <a href="#section-9" onclick="setActive(this)">9. Khung mẫu & DCOVA</a>
-            <a href="#section-poem" onclick="setActive(this)">10. Toàn bài thơ song ngữ</a>
-        </div>
-
-        <!-- Main content: mỗi mục đều có marker ABCDEFGH để bạn dễ dàng thay bằng nội dung thực -->
-        <div class="main-content" id="main-content">
-
-            <!-- Trang bìa trong -->
-            <h1 style="text-align:center; font-size:42px; margin:40px 0;">CÁC THUẬT NGỮ CĂN BẢN TRONG THỐNG KÊ</h1>
-            <p style="text-align:center; font-style:italic; font-size:22px; color:#b38b3d;">
-                Một góc nhìn thi ca về Thống kê Mô tả – Hành trình từ Vườn hoa đến Bức tranh Khoa học
-            </p>
-            <p style="text-align:center; margin:30px 0;">Tác giả: Mai Thế Duy</p>
-
-            <!-- Tóm tắt -->
-            <div class="decorated-box">
-                <strong>Tóm tắt</strong><br>
-                Hãy tưởng tượng thống kê là nghệ thuật hiểu về cả một khu vườn (Tổng thể) thông qua việc quan sát một lẵng hoa (Mẫu). Những con số bạn tính toán từ lẵng hoa đó là 'Thống kê' (Statistic), dùng để đoán xem bí mật thực sự của cả khu vườn 'Tham số' (Parameter) là gì...
-            </div>
-
-            <!-- Phần 1: Tổng thể (Ω) – Cả mảnh vườn -->
-            <h2 id="section-1">1. Tổng thể (Ω) – Cả mảnh vườn</h2>
-            <div class="poem">
-                Tổng thể là cả mảnh vườn,<br>
-                Ký hiệu Omega (Ω) ngát hương bốn bề chỗ này nhỏ lại.
-            </div>
-            <p>Tổng thể (Ω) chính là toàn bộ khu vườn với hàng ngàn bông hoa đủ màu sắc, hương thơm, chiều cao… Đây là tập hợp hoàn chỉnh tất cả các đối tượng mà chúng ta muốn nghiên cứu. Trong thống kê học, đối tượng quan tâm đầu tiên chính là <strong>tổng thể (population)</strong>.</p>
-            <p>Về mặt toán học: \(\Omega = \{\omega_1, \omega_2, \dots, \omega_N\}\) với N là kích thước tổng thể.</p>
-
-            
-            <!-- MARKER: ABCDEFGH cho mục 1 -->
-            <div class="marker-placeholder">🔖 trong đó:
-\begin{itemize}
-    \item $\omega_i$ ($i = 1, 2, \dots, N$) là các phần tử cơ bản (elementary outcomes) hoặc các cá thể trong tổng thể,
-    \item $N$ có thể là hữu hạn (finite) hoặc vô hạn (infinite),
-    \item Mỗi $\omega_i$ mang đầy đủ các đặc trưng (characteristics) hoặc biến ngẫu nhiên (random variables) mà chúng ta quan tâm.
-\end{itemize}]</div>
-            
-            <!-- Phần 2: Mẫu (S) & Đơn vị mẫu -->
-            <h2 id="section-2">2. Mẫu (S) & Đơn vị mẫu</h2>
-            <div class="poem">
-                Lẵng hoa tươi thắm gọi là Sample,<br>
-                Đại diện vườn hoa, tinh túy ngàn phương.
-            </div>
-            <p>Mẫu (sample) là một tập hợp con được chọn từ tổng thể, giúp ta khám phá đặc tính của tổng thể mà không cần khảo sát toàn bộ. Mỗi phần tử trong mẫu gọi là đơn vị mẫu.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: kích thước mẫu, tính đại diện, cách chọn mẫu sơ bộ, ví dụ thực tế về lấy mẫu trong khảo sát ý kiến sinh viên, chất lượng sản phẩm, v.v.]</div>
-            
-            <!-- Phần 3: Tham số & Thống kê mẫu -->
-            <h2 id="section-3">3. Tham số & Thống kê mẫu</h2>
-            <div class="poem">
-                Tham số (Parameter) – hương sắc vườn xưa,<br>
-                Thống kê (Statistic) – lẵng hoa đong đưa nắng chiều chữ nghiêng cỡ nhỏ.
-            </div>
-            <p><strong>Tham số</strong> là giá trị đặc trưng của tổng thể (thường ký hiệu μ, σ, p...). <strong>Thống kê mẫu</strong> là giá trị tính từ mẫu ( \(\bar{x}, s, \hat{p}\) ). Dùng thống kê để ước lượng tham số.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân biệt chi tiết giữa parameter và statistic, công thức tính trung bình mẫu, phương sai mẫu, sai số chuẩn, các ví dụ nghiên cứu điển hình.]</div>
-            
-            <!-- Phần 4: Biến & Bốn thang đo -->
-            <h2 id="section-4">4. Biến & Bốn thang đo</h2>
-            <p>Biến (variable) là đặc tính có thể thay đổi giữa các đơn vị. Có bốn thang đo: định danh (nominal), thứ bậc (ordinal), khoảng (interval), tỷ lệ (ratio).</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: mô tả từng thang đo, ví dụ cụ thể cho từng loại: màu sắc (danh nghĩa), xếp hạng (thứ bậc), nhiệt độ Celsius (khoảng), chiều cao (tỷ lệ). Phân tích ứng dụng và phép toán cho phép.]</div>
-            
-            <!-- Phần 5: Biến rời rạc & liên tục -->
-            <h2 id="section-5">5. Biến rời rạc & liên tục</h2>
-            <p>Biến rời rạc (discrete) có giá trị đếm được (số học sinh, số bông hoa). Biến liên tục (continuous) có thể nhận vô hạn giá trị trong khoảng (chiều cao, thời gian).</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân tích chuyên sâu, ví dụ minh họa trong y học, kinh tế, phân phối xác suất tương ứng, cách xử lý dữ liệu liên tục và rời rạc.]</div>
-            
-            <!-- Phần 6: Các phương pháp lấy mẫu -->
-            <h2 id="section-6">6. Các phương pháp lấy mẫu</h2>
-            <p>Ngẫu nhiên đơn giản, hệ thống, phân tầng, cụm, phi xác suất... Mỗi phương pháp có ưu điểm riêng.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: giải thích chi tiết từng kỹ thuật, sơ đồ minh họa, tình huống thực tế như điều tra dân số, nghiên cứu thị trường, ưu nhược điểm và sai số tiềm ẩn.]</div>
-            
-            <!-- Phần 7: Sai số lấy mẫu & Sai số phi mẫu -->
-            <h2 id="section-7">7. Sai số lấy mẫu & Sai số phi mẫu</h2>
-            <p>Sai số lấy mẫu (sampling error) là chênh lệch do chỉ khảo sát mẫu. Sai số phi mẫu (non-sampling error) đến từ thu thập, xử lý dữ liệu, thiên vị.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: phân tích nguyên nhân, cách giảm thiểu sai số, các cạm bẫy trong khảo sát thực tế, ví dụ về sai số do câu hỏi gây hiểu lầm, sai số do chọn mẫu không ngẫu nhiên.]</div>
-            
-            <!-- Phần 8: Làm sạch dữ liệu -->
-            <h2 id="section-8">8. Làm sạch dữ liệu</h2>
-            <p>Quá trình phát hiện và xử lý dữ liệu thiếu, ngoại lai, không nhất quán để đảm bảo độ tin cậy trước khi phân tích.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: các bước làm sạch dữ liệu, kỹ thuật xử lý missing values, outlier detection bằng Z-score, IQR, tác động của dữ liệu bẩn đến kết quả thống kê, case study thực tế.]</div>
-            
-            <!-- Phần 9: Khung mẫu & DCOVA -->
-            <h2 id="section-9">9. Khung mẫu & DCOVA</h2>
-            <p>Khung mẫu (sampling frame) là danh sách các phần tử tổng thể. DCOVA là quy trình: Define, Collect, Organize, Visualize, Analyze.</p>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: tầm quan trọng của khung mẫu, các lỗi thường gặp. Mô hình DCOVA trong phân tích thống kê hiện đại, ví dụ ứng dụng trong kinh doanh, khoa học dữ liệu.]</div>
-            
-            <!-- Phần 10: Toàn bài thơ song ngữ (có thêm marker để bạn thêm nội dung thực tế nếu muốn) -->
-            <h2 id="section-poem">10. Toàn bài thơ song ngữ</h2>
-            <div class="poem">
-                Vườn hoa là cả Population,<br>
-                Gói vào một lẵng gọi tên Sample.<br>
-                Tham số (Parameter) là hương là sắc vườn xưa,<br>
-                Thống kê (Statistic) từ lẵng đong đưa nắng chiều.<br>
-                Biến (Variable) như muôn cánh sắc màu,<br>
-                Thang đo định danh, thứ bậu, khoảng, tỷ lệ…<br>
-                Rời rạc (Discrete) đếm được vần thơ,<br>
-                Liên tục (Continuous) trải dài như giấc mơ không cùng.<br>
-                Lấy mẫu ngẫu nhiên, phân tầng, hệ thống, cụm…<br>
-                Sai số lấy mẫu, phi mẫu cần trông,<br>
-                Làm sạch dữ liệu như gột bụi hồng,<br>
-                Khung mẫu vững chắc – DCOVA sáng trong.
-            </div>
-            <div class="marker-placeholder">🔖 ABCDEFGH — [NỘI DUNG THỰC CỦA SÁCH: Phần này có thể là bản dịch tiếng Anh hoàn chỉnh, hoặc phân tích từng câu thơ kèm theo công thức minh họa, cảm nhận của tác giả về mối liên hệ giữa thống kê và thi ca. Bạn có thể thay bằng toàn bộ bài thơ song ngữ đầy đủ và lời bình.]</div>
-            
-            <!-- Thêm một phần kết và ghi chú marker tổng kết -->
-            <div style="text-align:center; margin:60px 0; font-size:15px; color:#b38b3d;">
-                🌸 Cuối sách – Hết 🌸<br>
-                Cảm ơn bạn đã đọc “Các Thuật Ngữ Căn Bản Trong Thống Kê”<br>
-                <span style="font-size:12px;">📌 Mọi dòng có chứa "ABCDEFGH" đều là vị trí bạn cần thay bằng nội dung thực sự của cuốn sách.</span>
-            </div>
-        </div>
-
-        <div class="page-number" id="page-number">Trang 1 / 42</div>
+    <!-- Bản Lục Bát -->
+    <div class="section-title"><i>🌸</i> Bản Lục Bát</div>
+    <div class="verse" id="vietnameseVerse">
+        <p>Anh là quy tắc hàm thiêng,</p>
+        <p>Em là biến \(x\) cõi tiên bước vào.</p>
+        <p>Thiếu \(x\) hàm biết tính sao?</p>
+        <p>Chỉ là nét mực gầy hao trên tờ.</p>
+        <p>Đưa em vào mộng vào mơ,</p>
+        <p>Trải miền giá trị vô bờ yêu thương.</p>
+        <p>Hương tình tỏa ngát trăm đường,</p>
+        <p>Hàm quy dẫn biến, tơ vương ngọc ngà.</p>
+        <p>Hàm, biến chẳng rẽ chia xa,</p>
+        <p>Tách rời vô nghĩa, phôi pha lụi tàn.</p>
+        <p>Mình là một cặp chứa chan,</p>
+        <p>Tình yêu cấu trúc muôn vàn yêu thương.</p>
     </div>
 
-    <script>
-        // ==================== VƯỜN HOA CANVAS ====================
-        const canvas = document.getElementById('garden-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height, flowers = [];
-        class Flower {
-            constructor() {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.size = Math.random() * 18 + 8;
-                this.speed = Math.random() * 1.2 + 0.6;
-                this.angle = Math.random() * Math.PI * 2;
-                this.swing = Math.random() * 0.03 + 0.01;
-                this.color = ['#e91e63','#ff9800','#4caf50','#2196f3','#9c27b0'][Math.floor(Math.random()*5)];
-            }
-            update() { this.y += this.speed; this.angle += this.swing; this.x += Math.sin(this.angle)*1.5; if(this.y > height+50) this.y = -50; }
-            draw() {
-                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
-                ctx.fillStyle = this.color;
-                for(let i=0; i<5; i++) {
-                    ctx.beginPath();
-                    ctx.ellipse(0, -this.size/2, this.size/2.5, this.size, i*Math.PI*0.4, 0, Math.PI*2);
-                    ctx.fill();
-                }
-                ctx.fillStyle = '#fff176';
-                ctx.beginPath(); ctx.arc(0,0,this.size/3.5,0,Math.PI*2); ctx.fill();
-                ctx.restore();
-            }
-        }
-        function resizeCanvas() {
-            width = window.innerWidth; height = window.innerHeight;
-            canvas.width = width; canvas.height = height;
-        }
-        function initFlowers() { flowers = []; for(let i=0;i<85;i++) flowers.push(new Flower()); }
-        function animate() {
-            ctx.clearRect(0,0,width,height);
-            const gradient = ctx.createLinearGradient(0,0,0,height);
-            gradient.addColorStop(0,'rgba(11,61,46,0.4)');
-            gradient.addColorStop(1,'rgba(26,95,71,0.6)');
-            ctx.fillStyle = gradient; ctx.fillRect(0,0,width,height);
-            flowers.forEach(f => { f.update(); f.draw(); });
-            requestAnimationFrame(animate);
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas(); initFlowers(); animate();
+    <!-- English Translation -->
+    <div class="section-title"><i>✨</i> English Translation</div>
+    <div class="verse english-verse" id="englishVerse">
+        <p>I am rule \(f\), divine and true,</p>
+        <p>The variable \(x\), my love, is you.</p>
+        <p>Without the input that you provide,</p>
+        <p>The function's purpose is cast aside.</p>
+        <p>I lead you through the range of grace,</p>
+        <p>To find the most fragrant, beautiful place.</p>
+        <p>Where poetry blooms and feelings soar,</p>
+        <p>Across the values, forevermore.</p>
+        <p>Variable and function, meant to be,</p>
+        <p>Bound in a strict eternity.</p>
+        <p>Apart, we wander lost and bare,</p>
+        <p>Meaningless entities in despair.</p>
+        <p>Together we map the stars above,</p>
+        <p>A flawless pair in the structure of love.</p>
+    </div>
 
-        // Click thêm hoa bên ngoài bìa
-        document.addEventListener('click', e => {
-            if(document.getElementById('book-interior').style.display === 'block') return;
-            for(let i=0;i<12;i++) {
-                const f = new Flower();
-                f.x = e.clientX; f.y = e.clientY; f.speed = Math.random()*4+3;
-                flowers.push(f);
-            }
-        });
+    <!-- Sơ Đồ Ánh Xạ Tình Yêu (SVG tương tác) -->
+    <div class="section-title"><i>🔮</i> Sơ Đồ Ánh Xạ Tình Yêu</div>
+    <div class="diagram-container" id="diagramArea">
+        <svg class="diagram-svg" width="550" height="280" viewBox="0 0 550 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                    <feMerge>
+                        <feMergeNode in="offsetblur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <linearGradient id="gradDomain" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#87b9e5" stop-opacity="0.9"/>
+                    <stop offset="100%" stop-color="#5c93c5" stop-opacity="0.8"/>
+                </linearGradient>
+                <linearGradient id="gradRange" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#f7bc7a" stop-opacity="0.9"/>
+                    <stop offset="100%" stop-color="#e69f5c" stop-opacity="0.85"/>
+                </linearGradient>
+            </defs>
 
-        // ==================== MỞ / ĐÓNG SÁCH ====================
-        function openBook() {
-            document.getElementById('cover-screen').style.opacity = '0';
+            <!-- Domain (Tập xác định) -->
+            <circle cx="130" cy="140" r="95" fill="url(#gradDomain)" stroke="#3c6e9e" stroke-width="2.5" filter="url(#glow)"/>
+            <text x="130" y="115" text-anchor="middle" fill="#1d4668" font-weight="bold" font-size="16">Tập Xác Định</text>
+            <text x="130" y="145" text-anchor="middle" fill="#2a577b" font-size="14" font-style="italic">(Em – Biến số x)</text>
+            <text x="130" y="185" text-anchor="middle" fill="#be7a3a" font-size="20" font-family="monospace">x ∈ ℝ</text>
+
+            <!-- Range (Miền giá trị) -->
+            <circle cx="420" cy="140" r="95" fill="url(#gradRange)" stroke="#b4622a" stroke-width="2.5" filter="url(#glow)"/>
+            <text x="420" y="115" text-anchor="middle" fill="#9b551f" font-weight="bold" font-size="16">Miền Giá Trị</text>
+            <text x="420" y="145" text-anchor="middle" fill="#b86930" font-size="14" font-style="italic">(Hoa mộng & Thơ tình)</text>
+            <text x="420" y="185" text-anchor="middle" fill="#9e613a" font-size="16" font-family="monospace">y = f(x)</text>
+
+            <!-- Mũi tên chính: Quy tắc f -->
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                    <polygon points="0 0, 10 5, 0 10" fill="#a56942" />
+                </marker>
+            </defs>
+            <path d="M 225 140 L 335 140" stroke="#c27e4a" stroke-width="3.5" fill="none" marker-end="url(#arrowhead)" stroke-dasharray="8 5"/>
+            <text x="275" y="115" text-anchor="middle" fill="#b45a2b" font-weight="bold" font-size="14">Quy tắc hàm f</text>
+            <text x="275" y="130" text-anchor="middle" fill="#a05a2c" font-size="12">(Anh – dẫn em qua miền giá trị)</text>
+
+            <!-- Mũi tên phụ: không thể tách rời -->
+            <path d="M 130 220 Q 275 260 420 220" stroke="#729fcf" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#arrowhead)"/>
+            <text x="270" y="255" text-anchor="middle" fill="#7c6b4b" font-size="11" font-style="italic">Hàm & Biến – Không thể tách rời</text>
+        </svg>
+    </div>
+
+    <!-- Thông điệp tương tác -->
+    <div class="message-card" id="interactiveMsg">
+        💞 <strong>Hàm và Biến</strong> – hai thực thể bất khả phân, cùng nhau tạo nên cấu trúc tình yêu vi diệu 💞
+    </div>
+    <div class="btn-group">
+        <button class="btn" id="philosophyBtn">📖 Triết lý ánh xạ</button>
+        <button class="btn" id="resetMsgBtn">🕯️ Lời tình nguyên bản</button>
+        <button class="btn" id="highlightPoemBtn">✨ Cảm nhận thi ca</button>
+    </div>
+
+    <footer>
+        <i>“Hàm, biến chẳng rẽ chia xa, tách rời vô nghĩa, phôi pha lụi tàn”</i><br/>
+        — Cấu trúc tình yêu: Anh là quy tắc, Em là biến số, cùng nhau xác định miền giá trị vĩnh cửu —
+    </footer>
+</div>
+
+<script>
+    (function() {
+        const msgDiv = document.getElementById('interactiveMsg');
+        const diagram = document.getElementById('diagramArea');
+        const philosophyBtn = document.getElementById('philosophyBtn');
+        const resetBtn = document.getElementById('resetMsgBtn');
+        const highlightBtn = document.getElementById('highlightPoemBtn');
+        const vietVerse = document.getElementById('vietnameseVerse');
+        const engVerse = document.getElementById('englishVerse');
+
+        // Các thông điệp triết lý ánh xạ
+        const philosophyMessages = [
+            "📐 Anh là quy tắc \(f\), em là biến \(x\) — quy tắc dẫn biến đi khắp miền giá trị, đưa em đến những vùng thơ tươi đẹp nhất.",
+            "🔗 Hàm và biến không thể rời nhau: nếu thiếu \(x\), hàm số chỉ là nét mực gầy hao. Nếu thiếu \(f\), \(x\) lạc lõng giữa vô định.",
+            "🎯 Tập xác định là em (biến số \(x\)), miền giá trị là nơi tình thơ nở rộ. Quy tắc \(f\) (anh) là cây cầu đưa em sang miền ấy.",
+            "💎 ‘Hàm, biến chẳng rẽ chia xa’ – đó là tiên đề tình yêu: hai thực thể chỉ có nghĩa khi thuộc về nhau.",
+            "🌹 Em là đầu vào \(x\), anh là quy tắc \(f\), đưa em tới miền giá trị của yêu thương – như ánh sáng dẫn bước trăng sao."
+        ];
+
+        function showRandomPhilosophy() {
+            const randomIndex = Math.floor(Math.random() * philosophyMessages.length);
+            msgDiv.style.opacity = '0';
             setTimeout(() => {
-                document.getElementById('cover-screen').style.display = 'none';
-                document.getElementById('book-interior').style.display = 'block';
-                // Cập nhật số trang ảo (chỉ mang tính biểu tượng)
-                document.getElementById('page-number').innerText = 'Trang 1 / 42';
-            }, 1200);
+                msgDiv.innerHTML = `✨ ${philosophyMessages[randomIndex]} ✨`;
+                msgDiv.style.opacity = '1';
+                msgDiv.style.transition = 'opacity 0.3s';
+                msgDiv.style.background = '#fff5e6';
+                // Kích hoạt MathJax để render công thức mới nếu có
+                if (window.MathJax) {
+                    MathJax.typesetPromise([msgDiv]).catch(err => console.log(err));
+                }
+            }, 150);
         }
-        function closeBook() {
-            document.getElementById('book-interior').style.display = 'none';
-            document.getElementById('cover-screen').style.display = 'flex';
-            document.getElementById('cover-screen').style.opacity = '1';
+
+        function resetToOriginalMessage() {
+            msgDiv.style.opacity = '0';
+            setTimeout(() => {
+                msgDiv.innerHTML = '💞 <strong>Hàm và Biến</strong> – hai thực thể bất khả phân, cùng nhau tạo nên cấu trúc tình yêu vi diệu 💞';
+                msgDiv.style.opacity = '1';
+                msgDiv.style.background = 'linear-gradient(145deg, #f7efdf, #fcf5e8)';
+            }, 120);
         }
-        function setActive(el) {
-            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
-            el.classList.add('active');
+
+        // Hiệu ứng nhấp nháy cho các câu thơ
+        function highlightPoem() {
+            if (vietVerse) {
+                vietVerse.style.transition = 'all 0.4s';
+                vietVerse.style.backgroundColor = '#fff7e8';
+                vietVerse.style.boxShadow = '0 0 0 2px #e7cfa1, 0 8px 20px rgba(0,0,0,0.1)';
+                setTimeout(() => {
+                    vietVerse.style.backgroundColor = '';
+                    vietVerse.style.boxShadow = '';
+                }, 800);
+            }
+            if (engVerse) {
+                engVerse.style.transition = 'all 0.4s';
+                engVerse.style.backgroundColor = '#fff6ea';
+                engVerse.style.boxShadow = '0 0 0 2px #e2caa0';
+                setTimeout(() => {
+                    engVerse.style.backgroundColor = '';
+                    engVerse.style.boxShadow = '';
+                }, 800);
+            }
+            msgDiv.style.opacity = '0';
+            setTimeout(() => {
+                msgDiv.innerHTML = '🌸 <strong>“Đưa em vào mộng vào mơ, trải miền giá trị vô bờ yêu thương”</strong> — Hàm số dẫn biến, tình thơ bất tận 🌸';
+                msgDiv.style.opacity = '1';
+            }, 120);
         }
-        
-        // đánh dấu active khi cuộn (tính năng nhẹ)
-        const sections = document.querySelectorAll('.main-content h2');
-        window.addEventListener('scroll', function() {
-            if(document.getElementById('book-interior').style.display !== 'block') return;
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 150;
-                if(pageYOffset >= sectionTop) current = section.getAttribute('id');
+
+        // Sự kiện click vào sơ đồ ánh xạ
+        if (diagram) {
+            diagram.addEventListener('click', () => {
+                msgDiv.style.opacity = '0';
+                setTimeout(() => {
+                    msgDiv.innerHTML = '🔁 <strong>Ánh xạ tình yêu:</strong> Tập xác định (Em) → Quy tắc \(f\) (Anh) → Miền giá trị (Hoa mộng & Thơ tình). Cả hai tạo nên vẻ đẹp duy nhất!';
+                    msgDiv.style.opacity = '1';
+                    msgDiv.style.background = '#fff3e2';
+                    if (window.MathJax) {
+                        MathJax.typesetPromise([msgDiv]).catch(err => console.log(err));
+                    }
+                }, 100);
+                // Hiệu ứng nhấp nháy cho vòng tròn
+                const svgCircles = document.querySelectorAll('.diagram-svg circle');
+                svgCircles.forEach(c => {
+                    c.style.transition = 'filter 0.2s';
+                    c.setAttribute('filter', 'url(#glow)');
+                    setTimeout(() => c.setAttribute('filter', 'url(#glow)'), 10);
+                });
             });
-            document.querySelectorAll('.sidebar a').forEach(a => {
-                a.classList.remove('active');
-                if(a.getAttribute('href') === '#'+current) a.classList.add('active');
-            });
+        }
+
+        // Gắn sự kiện các nút
+        if (philosophyBtn) philosophyBtn.addEventListener('click', showRandomPhilosophy);
+        if (resetBtn) resetBtn.addEventListener('click', resetToOriginalMessage);
+        if (highlightBtn) highlightBtn.addEventListener('click', highlightPoem);
+
+        // Thêm hiệu ứng di chuột vào các dòng thơ để cảm nhận (tương tác nhẹ)
+        const allVerses = [vietVerse, engVerse];
+        allVerses.forEach(verse => {
+            if (verse) {
+                verse.addEventListener('mouseenter', () => {
+                    verse.style.transform = 'scale(1.005)';
+                });
+                verse.addEventListener('mouseleave', () => {
+                    verse.style.transform = '';
+                });
+            }
         });
 
-        console.log('%c✅ Cuốn sách kỹ thuật số đã hoàn thành! 🌸 Mỗi mục trong mục lục đều có dòng chữ "ABCDEFGH" nổi bật để bạn dễ dàng dò tìm và điền nội dung thực của cuốn sách.', 'color:#4caf50; font-size:16px; font-weight:bold;');
-        console.log('%c📘 Gợi ý: Bạn có thể tìm kiếm từ khóa "ABCDEFGH" trong code để nhanh chóng thay thế bằng nội dung chính xác từ bản thảo.', 'background:#d4af77; color:#1a3c2e; padding:4px 8px; border-radius:8px;');
-    </script>
+        // Tạo hiệu ứng sao lung linh trên nền
+        function createStars() {
+            for (let i = 0; i < 60; i++) {
+                let star = document.createElement('div');
+                star.classList.add('star');
+                let size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                star.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(star);
+            }
+        }
+        createStars();
+        
+        // Đảm bảo MathJax render tất cả công thức lần đầu
+        if (window.MathJax) {
+            MathJax.typesetPromise().catch(err => console.log(err));
+        }
+    })();
+</script>
 </body>
 </html>
