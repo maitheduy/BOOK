@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quyển sách: Từ giỏ trứng gà ngẫu nhiên đến dynamical interior của Bandt</title>
+    <!-- MathJax 3 core -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #b7bfc5 0%, #8fa0aa 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Georgia', 'Times New Roman', 'Palatino', 'Book Antiqua', serif;
+            padding: 2rem;
+        }
+
+        /* Container chính của sách */
+        .book-wrapper {
+            position: relative;
+            width: 900px;
+            max-width: 95vw;
+            height: 650px;
+            max-height: 85vh;
+            perspective: 2000px;
+        }
+
+        /* Khung sách với hiệu ứng lật */
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+        }
+
+        /* Các trang sách */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: #fef7e0;
+            border-radius: 8px 12px 12px 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            backface-visibility: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Trang chẵn (lưng sách bên trái) */
+        .page-left {
+            transform-origin: left center;
+            transform: rotateY(0deg);
+            border-right: 1px solid #e2c6a3;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Trang lẻ (mặt phải) */
+        .page-right {
+            transform-origin: right center;
+            transform: rotateY(0deg);
+            left: 0;
+            border-left: 1px solid #e2c6a3;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Trang đang mở */
+        .book.flipped .page-left {
+            transform: rotateY(-180deg);
+        }
+
+        .book.flipped .page-right {
+            transform: rotateY(180deg);
+        }
+
+        /* Nút điều khiển */
+        .nav-buttons {
+            position: absolute;
+            bottom: -70px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: #8b5a2b;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            background: #6b3e1a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .page-number {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #ac8f6b;
+            font-family: monospace;
+        }
+
+        /* Phong cách nội dung */
+        .cover-content, .toc-content, .chapter-content {
+            height: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c2b28;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 1rem 0 0.8rem;
+            color: #5a3a1e;
+            border-left: 4px solid #c49a6c;
+            padding-left: 1rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin: 1rem 0 0.5rem;
+            color: #7a5a3a;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .toc-list li {
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            border-bottom: 1px dashed #dec29c;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toc-list li:hover {
+            background: #f5e8d4;
+            padding-left: 1rem;
+            transform: translateX(5px);
+        }
+
+        .toc-list a {
+            text-decoration: none;
+            color: #3a2c1e;
+            font-weight: 500;
+            display: block;
+        }
+
+        .chapter-marker {
+            background: #f0e4d0;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #9b5e2c;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .lipsum-block {
+            margin: 1rem 0;
+            padding: 0.5rem;
+            border-left: 3px solid #e2c6a3;
+            background: #fffaf0;
+        }
+
+        .lipsum-label {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #b87c4a;
+            background: #f5e8d4;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .gold-line {
+            height: 2px;
+            background: linear-gradient(90deg, #f3d9a4, #b88b4b, #f3d9a4);
+            width: 100%;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        /* Scrollbar đẹp */
+        .page::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: #f0e4d0;
+            border-radius: 10px;
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: #c49a6c;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .book-wrapper {
+                height: 550px;
+            }
+            .page {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="book-wrapper">
+    <div class="book" id="book">
+        <!-- Trang 1: Bìa sách (trang phải) -->
+        <div class="page page-right" id="page-cover">
+            <div class="cover-content">
+                <div style="text-align: center; margin-top: 1rem;">✧ ✦ ✧</div>
+                <h1 style="text-align: center; font-size: 2rem; margin-top: 1rem;">Từ giỏ trứng gà ngẫu nhiên<br>đến dynamical interior của Bandt</h1>
+                <p style="text-align: center; font-style: italic; color: #7a5a3a;">Một hành trình thực tập lý thuyết sâu sắc qua neighbor graph và neighborhood graph</p>
+                <div class="gold-line"></div>
+                
+                <div style="background: rgba(245, 235, 215, 0.7); border-left: 5px solid #b87c4a; padding: 1rem; margin: 1rem 0;">
+                    <p><strong>Bài toán bà cụ bán trứng gà</strong> – Hệ IFS: 
+                    \[
+                    f_1(x)=\frac{x}{2}+10,\qquad f_2(x)=\frac{x}{2}+10.5
+                    \]</p>
+                    <p>Attractor: \(A = [20,21]\), dynamical boundary \(\{20,21\}\), interior \((20,21)\).</p>
+                    <p>Neighbor graph: 3 trạng thái (\(id,\; h_{12},\; h_{21}\)) với \(h_{12}=x+1,\; h_{21}=x-1\).</p>
+                </div>
+                
+                <!-- Neighbor Graph SVG -->
+                <div style="background: #fff8ef; border-radius: 16px; padding: 0.8rem; margin: 1rem 0; text-align: center;">
+                    <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg" style="max-width: 100%; height: auto;">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="7.5" refY="4" orient="auto">
+                                <polygon points="0 0, 8 4, 0 8" fill="#8B5A2B" stroke="none" />
+                            </marker>
+                        </defs>
+                        <circle cx="80" cy="65" r="28" fill="#F7E9D0" stroke="#A5713C" stroke-width="1.8" />
+                        <text x="80" y="70" text-anchor="middle" font-size="12" font-weight="bold" fill="#4B2E1A">id</text>
+                        <circle cx="280" cy="25" r="28" fill="#F7E9D0" stroke="#A5713C" stroke-width="1.8" />
+                        <text x="280" y="30" text-anchor="middle" font-size="12" font-weight="bold" fill="#4B2E1A">h₁₂</text>
+                        <circle cx="280" cy="105" r="28" fill="#F7E9D0" stroke="#A5713C" stroke-width="1.8" />
+                        <text x="280" y="110" text-anchor="middle" font-size="12" font-weight="bold" fill="#4B2E1A">h₂₁</text>
+                        <path d="M105 56 Q 150 40 252 33" stroke="#B87C4A" stroke-width="1.8" fill="none" marker-end="url(#arrowhead)" />
+                        <text x="175" y="28" fill="#9B5E2C" font-size="9">(1,2)</text>
+                        <path d="M105 74 Q 155 90 252 97" stroke="#B87C4A" stroke-width="1.8" fill="none" marker-end="url(#arrowhead)" />
+                        <text x="175" y="105" fill="#9B5E2C" font-size="9">(2,1)</text>
+                        <path d="M255 40 Q 210 52 110 62" stroke="#B87C4A" stroke-width="1.8" fill="none" marker-end="url(#arrowhead)" />
+                        <text x="180" y="58" fill="#9B5E2C" font-size="9">(2,1)</text>
+                        <path d="M255 92 Q 208 80 110 68" stroke="#B87C4A" stroke-width="1.8" fill="none" marker-end="url(#arrowhead)" />
+                        <text x="180" y="82" fill="#9B5E2C" font-size="9">(1,2)</text>
+                    </svg>
+                    <p style="font-size: 0.7rem; color: #8b6946; margin-top: 5px;">Neighbor graph – automata hữu hạn 3 trạng thái</p>
+                </div>
+                
+                <div class="author-block" style="margin-top: 1rem; border-top: 2px dotted #dec29c; padding-top: 0.8rem; display: flex; justify-content: space-between;">
+                    <span style="font-weight: bold;">✍️ Dr.rer.nat Mai Thế Duy</span>
+                    <span style="background: #e9ddcd; padding: 0.2rem 0.8rem; border-radius: 30px;">📘 Nhà xuất bản Thống nhất Toán học</span>
+                </div>
+                <div class="page-number">Trang 1 • Bìa sách</div>
+            </div>
+        </div>
+
+        <!-- Trang 2: Mục lục (trang trái) -->
+        <div class="page page-left" id="page-toc">
+            <div class="toc-content">
+                <h2>📖 Mục lục</h2>
+                <div class="gold-line"></div>
+                <ul class="toc-list" id="toc-list">
+                    <li data-chapter="0"><a href="#">Chương 1: Giới thiệu – Từ trứng gà đến hệ IFS</a></li>
+                    <li data-chapter="1"><a href="#">Chương 2: Hệ IFS sửa đổi và attractor</a></li>
+                    <li data-chapter="2"><a href="#">Chương 3: Dynamical boundary theo Bandt</a></li>
+                    <li data-chapter="3"><a href="#">Chương 4: Neighbor graph và neighborhood graph</a></li>
+                    <li data-chapter="4"><a href="#">Chương 5: Magnification flow và Markov chain</a></li>
+                    <li data-chapter="5"><a href="#">Chương 6: Kết nối với bài toán trứng và ý nghĩa</a></li>
+                    <li data-chapter="6"><a href="#">Phụ lục: Mã nguồn và tài liệu tham khảo</a></li>
+                </ul>
+                <div class="gold-line"></div>
+                <p style="margin-top: 1rem; font-style: italic; color: #7a5a3a;">✨ Nhấp vào tên chương để chuyển đến nội dung tương ứng.</p>
+                <div class="page-number">Trang 2 • Mục lục</div>
+            </div>
+        </div>
+
+        <!-- Các trang nội dung (chương) - sẽ được tạo động bằng JS -->
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" onclick="prevPage()">◀ Trang trước</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextPage()">Trang sau ▶</button>
+    </div>
+</div>
+
+<script>
+    // Định nghĩa nội dung các chương với LIPSUM có đánh số để dễ thay thế
+    const chapters = [
+        {
+            title: "Chương 1: Giới thiệu – Từ trứng gà đến hệ IFS",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 1 - LIPSUM_001</div>
+                <h2>1. Giới thiệu</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_001 - Đoạn mở đầu</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_002 - Nội dung chính</div>
+                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_003 - Công thức minh họa</div>
+                    <p>Hệ IFS cơ bản: \\(f_1(x)=\\frac{x}{2}+10\\), \\(f_2(x)=\\frac{x}{2}+10.5\\). Attractor \\(A = [20,21]\\).</p>
+                    <p>$$\\mathbb{E}_\\pi[X] = 20.5$$</p>
+                </div>
+            `
+        },
+        {
+            title: "Chương 2: Hệ IFS sửa đổi và attractor",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 2 - LIPSUM_004</div>
+                <h2>2. Hệ IFS sửa đổi và attractor</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_004 - Phân tích hệ hàm</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_005 - Attractor và tính chất</div>
+                    <p>Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>
+                    <p>Attractor \\(A = [20,21]\\) thỏa mãn \\(f_1(A) \\cup f_2(A) = A\\) và \\(f_1(A) \\cap f_2(A) = \\{20.5\\}\\).</p>
+                </div>
+            `
+        },
+        {
+            title: "Chương 3: Dynamical boundary theo Bandt",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 3 - LIPSUM_006</div>
+                <h2>3. Dynamical boundary theo Bandt</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_006 - Định nghĩa boundary sets</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_007 - Dynamical boundary trong interval IFS</div>
+                    <p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Dynamical boundary \\(B(A) = \\{20, 21\\}\\).</p>
+                    <p>Dynamical interior là \\((20,21)\\) – tập hợp các điểm có thể phóng đại vô hạn mà không chạm biên.</p>
+                </div>
+            `
+        },
+        {
+            title: "Chương 4: Neighbor graph và neighborhood graph",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 4 - LIPSUM_008</div>
+                <h2>4. Neighbor graph và neighborhood graph</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_008 - Định nghĩa neighbor map</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.</p>
+                    <p>Neighbor maps: \\(h_{12} = f_1^{-1} \\circ f_2(x) = x+1\\), \\(h_{21} = f_2^{-1} \\circ f_1(x) = x-1\\).</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_009 - Automata hữu hạn</div>
+                    <p>Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Neighbor graph chỉ có 3 đỉnh và neighborhood graph có 1 state duy nhất.</p>
+                </div>
+            `
+        },
+        {
+            title: "Chương 5: Magnification flow và Markov chain",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 5 - LIPSUM_010</div>
+                <h2>5. Magnification flow và Markov chain</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_010 - Dòng phóng đại rời rạc</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_011 - Markov chain Bernoulli hai chiều</div>
+                    <p>Mỗi bước phóng đại hệ số \\(\\times 2\\), chọn nhánh \\(f_1\\) hoặc \\(f_2\\) với xác suất \\(\\frac{1}{2}\\). Đây là Markov chain đơn giản nhất, mô tả magnification flow.</p>
+                    <p>$$P = \\begin{pmatrix} \\frac{1}{2} & \\frac{1}{2} \\\\ \\frac{1}{2} & \\frac{1}{2} \\end{pmatrix}$$</p>
+                </div>
+            `
+        },
+        {
+            title: "Chương 6: Kết nối với bài toán trứng và ý nghĩa",
+            content: `
+                <div class="chapter-marker">CHƯƠNG 6 - LIPSUM_012</div>
+                <h2>6. Kết nối với bài toán trứng và ý nghĩa</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_012 - Từ dân gian đến fractal hiện đại</div>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_013 - Bài học và triển vọng</div>
+                    <p>“Ngẫu nhiên, khi được tổ chức bởi quy luật co hợp lý và OSC + finite type, tạo ra trật tự sâu sắc có thể mô tả bằng automata hữu hạn.”</p>
+                    <p>Từ giỏ trứng gà dân gian đến dynamical interior – một hành trình đầy cảm hứng.</p>
+                </div>
+            `
+        },
+        {
+            title: "Phụ lục: Mã nguồn và tài liệu tham khảo",
+            content: `
+                <div class="chapter-marker">PHỤ LỤC - LIPSUM_014</div>
+                <h2>Phụ lục: Tài liệu tham khảo</h2>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_014 - Danh mục tài liệu</div>
+                    <p>1. Christoph Bandt, "The dynamical interior of self-similar sets", arXiv:2503.10430, 2025.</p>
+                    <p>2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>3. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <p>4. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+                </div>
+                <div class="lipsum-block">
+                    <div class="lipsum-label">📝 LIPSUM_015 - Mã nguồn tham khảo</div>
+                    <p>Mã nguồn HTML/CSS/JS của quyển sách tương tác này có thể được tìm thấy tại repository ...</p>
+                    <pre style="background:#f0e4d0; padding:0.5rem; border-radius:8px; font-size:0.7rem;">// Code mẫu IFS simulation sẽ được cập nhật</pre>
+                </div>
+            `
+        }
+    ];
+
+    let currentPage = 0; // 0: cover, 1: toc, 2+: chapters
+    let totalPages = 2 + chapters.length; // cover + toc + chapters
+
+    // Tạo các trang chương động
+    function buildChapterPages() {
+        const book = document.getElementById('book');
+        // Xóa các trang chương cũ nếu có (giữ lại cover và toc)
+        const existingChapters = document.querySelectorAll('.chapter-page');
+        existingChapters.forEach(page => page.remove());
+        
+        chapters.forEach((chapter, idx) => {
+            const pageDiv = document.createElement('div');
+            pageDiv.className = `page ${idx % 2 === 0 ? 'page-right' : 'page-left'} chapter-page`;
+            pageDiv.id = `chapter-${idx}`;
+            pageDiv.innerHTML = `
+                <div class="chapter-content">
+                    ${chapter.content}
+                    <div class="gold-line"></div>
+                    <div class="page-number">Trang ${3 + idx} • ${chapter.title}</div>
+                </div>
+            `;
+            book.appendChild(pageDiv);
+        });
+    }
+
+    // Cập nhật vị trí các trang (z-index và hiển thị)
+    function updatePages() {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach((page, idx) => {
+            // Ẩn tất cả trang, chỉ hiển thị trang hiện tại và trang tiếp theo (nếu có)
+            if (idx === currentPage) {
+                page.style.display = 'block';
+                page.style.zIndex = '10';
+            } else if (idx === currentPage + 1 && currentPage % 2 === 0) {
+                page.style.display = 'block';
+                page.style.zIndex = '5';
+            } else {
+                page.style.display = 'none';
+            }
+        });
+        
+        // Cập nhật trạng thái nút
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        prevBtn.disabled = (currentPage === 0);
+        nextBtn.disabled = (currentPage >= totalPages - 1);
+        
+        prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+        nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+    }
+
+    // Chuyển trang
+    function nextPage() {
+        if (currentPage < totalPages - 1) {
+            currentPage++;
+            updatePages();
+            // MathJax render lại công thức trên trang mới
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            updatePages();
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    }
+
+    // Chuyển đến chương từ mục lục
+    function goToChapter(chapterIndex) {
+        // chapterIndex: 0 = chương 1 (trang 2 trong mảng pages)
+        const targetPage = 2 + chapterIndex;
+        if (targetPage >= 0 && targetPage < totalPages) {
+            currentPage = targetPage;
+            updatePages();
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+    }
+
+    // Khởi tạo sách
+    function initBook() {
+        buildChapterPages();
+        updatePages();
+        
+        // Gắn sự kiện cho mục lục
+        const tocItems = document.querySelectorAll('.toc-list li');
+        tocItems.forEach((item, idx) => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                goToChapter(idx);
+            });
+        });
+        
+        // MathJax render
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    // Gọi khởi tạo khi trang load
+    window.addEventListener('DOMContentLoaded', initBook);
+</script>
+</body>
+</html>
